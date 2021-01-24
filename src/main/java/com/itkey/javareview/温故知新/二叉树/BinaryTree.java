@@ -1,15 +1,17 @@
 package com.itkey.javareview.温故知新.二叉树;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 interface IBinaryTree<E> {      //定义二叉树标准操作接口
-    public void add(E data);    //实现数据的增加
-    public int size();
-    public  Object[] toArray();
-    public boolean contains(E data);    //进行数据查询
-    public void remove(E data);         //删除数据
+    void add(E data);    //实现数据的增加
+    int size();
+    Object[] toArray();
+    boolean contains(E data);    //进行数据查询
+    void remove(E data);         //删除数据
 
-    public String guiString();        //转换成可以在tree-builder中展示的数据
+    String guiString();        //转换成可以在tree-builder中展示的数据
 }
 
 class BinaryTreeImpl<E> implements IBinaryTree<E>{
@@ -30,6 +32,41 @@ class BinaryTreeImpl<E> implements IBinaryTree<E>{
             BinaryTreeImpl.this.data[BinaryTreeImpl.this.foot ++] = (E)this.data;
             if(this.right !=null){              //此时存在有右子树
                 this.right.toArrayNode();       //递归调用
+            }
+        }
+
+        public void toGUIString(){              //实现数据的递归
+
+            //BinaryTreeImpl.this.data[BinaryTreeImpl.this.foot ++] = (E)this.data;
+            //根节点为0级，判断当前节点的层级，实际就是判断到根节点的距离
+            int line = 0;
+            Node currentNode = this;
+            while (currentNode.parent!=null){
+                currentNode = currentNode.parent;
+                line++;
+            }
+            System.out.println("*******node:"+this.data+"为第"+line+"层");
+            while (BinaryTreeImpl.this.lists.size()<line+1+1){      //考虑到会赋值一下级
+                BinaryTreeImpl.this.lists.add(new ArrayList());
+            }
+
+            List list = BinaryTreeImpl.this.lists.get(line);
+            list.add(this.data);
+
+            if(this.left != null){              //此时存在有左子树
+                this.left.toGUIString();    //递归调用
+            }else if(this.right!=null){         //右节点不为空，则需要输出null，不然也不需要null
+                //如果不存在说明下一级，则为null
+                list = BinaryTreeImpl.this.lists.get(line+1);
+                list.add(null);
+            }
+
+            if(this.right !=null){              //此时存在有右子树
+                this.right.toGUIString();       //递归调用
+            }else if(this.left!=null){          //左节点不为空，才输出null
+                //如果不存在说明下一级，则为null
+                list = BinaryTreeImpl.this.lists.get(line+1);
+                list.add(null);
             }
         }
 
@@ -61,6 +98,8 @@ class BinaryTreeImpl<E> implements IBinaryTree<E>{
     private int count;  // 保存数据的个数
     private int foot;       //描述的是数组的索引
     private Object [] data;     //返回的对象数组
+
+    private List<List<Object>> lists = new ArrayList<>();
     @Override
     public void add(E data) {
         if(data ==null ){
@@ -237,35 +276,29 @@ class BinaryTreeImpl<E> implements IBinaryTree<E>{
      */
     @Override
     public String guiString() {
-        int line = 1;
-        //根节点为第1行
-        System.out.println("第"+line+"行："+ this.root.data);
-        line++;
         Node currentNode = this.root;
-        while (currentNode.left!=null||currentNode.right!=null){
-            System.out.print("第"+line+"行：");
-            if(currentNode.left!=null){
-                currentNode = currentNode.left;
-                System.out.print("左："+currentNode.left.data);
-                currentNode = currentNode.left;
+        currentNode.toGUIString();
+        List result = new ArrayList();      //不好判断数据大小，所以这里用List了
+        for (List list :
+                this.lists) {
+            for (Object obj :
+                    list) {
+                result.add(obj);
             }
-            if(currentNode.right!=null){
-                currentNode = currentNode.right;
-                System.out.print("右："+currentNode.right.data);
-                currentNode = currentNode.right;
-            }
-            System.out.println();
-
-            line++;
         }
-        return null;
+        String resultStr = result.toString();
+        resultStr = resultStr.replaceAll("\\s","");
+        return resultStr;
     }
 }
 
 public class BinaryTree {
     public static void main(String[] args) {
         IBinaryTree<Integer> binaryTree = new BinaryTreeImpl<>();
-        int numbers[] = new int[] {80,50,90,55,30,60,10,85,95};
+        //int numbers[] = new int[] {80,50,90,55,30,60,10,85,95};
+        //int numbers[] = new int[] {80,50,90,30,85,95,60,10};
+        //int numbers[] = new int[] {80,50,90,95,85,60,30,10,55,70};
+        int numbers[] = new int[] {80,90,95,85,60,30,10,55,70};
         for (int num :
                 numbers) {
             binaryTree.add(num);
@@ -274,7 +307,6 @@ public class BinaryTree {
         //binaryTree.remove(80);
         System.out.println("【获取全部数据】"+ Arrays.toString(binaryTree.toArray()));
 
-        binaryTree.guiString();
-
+        System.out.println(binaryTree.guiString());;
     }
 }
