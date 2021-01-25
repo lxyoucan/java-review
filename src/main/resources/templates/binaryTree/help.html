@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>二叉树</title>
+  <link type="text/css" rel="stylesheet" href="/binaryTree/style.css">
+  <script src="/jslib/jquery.min.js"></script>
+  <script src="/jslib/layer/layer.js"></script>
+  <script>
+    function openWindow(){
+      var btData= document.getElementById("btData").value;
+      //window.open("/binaryTree?btData="+btData);
+      //layer.alert("hello world");
+      layer.open({
+        type: 2,
+        title: '二叉树图形生成',
+        shadeClose: true,
+        shade: false,
+        maxmin: true, //开启最大化最小化按钮
+        area: ['893px', '600px'],
+        content: "/binaryTree?btData="+btData
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>二叉树</h1>
+  <p>请输入数字并以英文的逗号隔开(,)首个数字将成为根节点。</p>
+  <textarea name="btData" id="btData" cols="50" rows="10">80,50,90,95,85,60,30,10,55,70</textarea>
+  <br>
+  <input type="button" value="生成二叉树图" onclick="openWindow()">
+</body>
+</html>

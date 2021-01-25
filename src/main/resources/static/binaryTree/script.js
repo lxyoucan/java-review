@@ -30,7 +30,7 @@ function setup() {
     nodeModalDoneBtn.onclick = modalEditorDone;
     nodeModalDelBtn.onclick = deleteCurrentNode;
 
-    root = Node.deserialize('[1,2,3,null,7,4,5,null,null,6]');
+    root = Node.deserialize(binaryTreeData);
     genButton.elt.classList.add('button');
     textBox.elt.value = Node.serialize(root);
     myCamera = new Camera();

@@ -1,26 +1,18 @@
-package com.itkey.javareview.温故知新.二叉树;
+package com.itkey.javareview.service.impl;
+
+
+import com.itkey.javareview.service.IBinaryTree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-interface IBinaryTree<E> {      //定义二叉树标准操作接口
-    void add(E data);    //实现数据的增加
-    int size();
-    Object[] toArray();
-    boolean contains(E data);    //进行数据查询
-    void remove(E data);         //删除数据
-
-    String guiString();        //转换成可以在tree-builder中展示的数据
-}
-
-class BinaryTreeImpl<E> implements IBinaryTree<E>{
+public class BinaryTreeImpl<E> implements IBinaryTree<E> {
 
     private class Node{         //该内部类只为当前的外部类提供服务
         private Comparable<E> data;     //要存储的数据，全部进行强制性转型
-        private Node left;          //左子树
-        private Node right;         //右子树
-        private Node parent;        //父节点
+        private BinaryTreeImpl.Node left;          //左子树
+        private BinaryTreeImpl.Node right;         //右子树
+        private BinaryTreeImpl.Node parent;        //父节点
         public Node(Comparable<E> data){        //节点创建的同时保存数据
             this.data = data;
         }
@@ -40,7 +32,7 @@ class BinaryTreeImpl<E> implements IBinaryTree<E>{
             //BinaryTreeImpl.this.data[BinaryTreeImpl.this.foot ++] = (E)this.data;
             //根节点为0级，判断当前节点的层级，实际就是判断到根节点的距离
             int line = 0;
-            Node currentNode = this;
+            BinaryTreeImpl.Node currentNode = this;
             while (currentNode.parent!=null){
                 currentNode = currentNode.parent;
                 line++;
@@ -70,7 +62,7 @@ class BinaryTreeImpl<E> implements IBinaryTree<E>{
             }
         }
 
-        public Node containsNode(E data){
+        public BinaryTreeImpl.Node containsNode(E data){
             if(this.data.compareTo(data)==0){       //数据相同
                 return this;        //返回当前的节点
             } else{
@@ -94,7 +86,7 @@ class BinaryTreeImpl<E> implements IBinaryTree<E>{
 
 
     // ----------------以下的操作为二叉树实现结构----------------
-    private Node root;      //数据结构都需要提供有根节点
+    private BinaryTreeImpl.Node root;      //数据结构都需要提供有根节点
     private int count;  // 保存数据的个数
     private int foot;       //描述的是数组的索引
     private Object [] data;     //返回的对象数组
@@ -108,12 +100,12 @@ class BinaryTreeImpl<E> implements IBinaryTree<E>{
         if(!(data instanceof  Comparable)){
             throw new ClassCastException("要保存数据对象所在的类没有实现java.lang.Comparable接口。");
         }
-        Node newNode = new Node((Comparable) data);         //将数据保存在节点之中
+        BinaryTreeImpl.Node newNode = new BinaryTreeImpl.Node((Comparable) data);         //将数据保存在节点之中
         if(this.root ==null){           //当前没有根节点存在
             this.root = newNode;        //保存根节点
             count++;
         } else {            //需要确定节点的存储位置
-            Node currentNode = this.root;   //设置当前节点
+            BinaryTreeImpl.Node currentNode = this.root;   //设置当前节点
             while (currentNode!=newNode){      //当前节点不是新节点，表示新的节点未保存
                 if(currentNode.data.compareTo(data)<=0){        //比根节点大
                     if(currentNode.right !=null){       //当前节点存在有右节点
@@ -188,9 +180,9 @@ class BinaryTreeImpl<E> implements IBinaryTree<E>{
         }
 
     }
-    private Node moveNode(E data){                          //实现节点移动
-        Node moveSubNode = null;                            //假设当前的节点为要移动的子节点
-        Node deleteNode = this.root.containsNode(data);     //首先要判断删除节点是否存在
+    private BinaryTreeImpl.Node moveNode(E data){                          //实现节点移动
+        BinaryTreeImpl.Node moveSubNode = null;                            //假设当前的节点为要移动的子节点
+        BinaryTreeImpl.Node deleteNode = this.root.containsNode(data);     //首先要判断删除节点是否存在
         if(deleteNode == null){     //不存在删除节点
             return null;            //没有要移动的节点
         }
@@ -276,7 +268,7 @@ class BinaryTreeImpl<E> implements IBinaryTree<E>{
      */
     @Override
     public String guiString() {
-        Node currentNode = this.root;
+        BinaryTreeImpl.Node currentNode = this.root;
         currentNode.toGUIString();
         List result = new ArrayList();      //不好判断数据大小，所以这里用List了
         for (List list :
@@ -289,24 +281,5 @@ class BinaryTreeImpl<E> implements IBinaryTree<E>{
         String resultStr = result.toString();
         resultStr = resultStr.replaceAll("\\s","");
         return resultStr;
-    }
-}
-
-public class BinaryTree {
-    public static void main(String[] args) {
-        IBinaryTree<Integer> binaryTree = new BinaryTreeImpl<>();
-        //int numbers[] = new int[] {80,50,90,55,30,60,10,85,95};
-        //int numbers[] = new int[] {80,50,90,30,85,95,60,10};
-        int numbers[] = new int[] {80,50,90,95,85,60,30,10,55,70};
-        //int numbers[] = new int[] {50,30,70,80,20,10,35,100,60};
-        for (int num :
-                numbers) {
-            binaryTree.add(num);
-        }
-        //binaryTree.remove(50);
-        //binaryTree.remove(80);
-        System.out.println("【获取全部数据】"+ Arrays.toString(binaryTree.toArray()));
-
-        System.out.println(binaryTree.guiString());;
     }
 }

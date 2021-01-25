@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <title>Java二叉树对象图形化</title>
-  <link type="text/css" rel="stylesheet" href="style.css">
+  <link type="text/css" rel="stylesheet" href="/binaryTree/style.css">
 </head>
 <body>
+  <script th:inline="javascript">
+    //用户显示二叉树的数据
+    var binaryTreeData = /*[[${btData}]]*/'';
+  </script>
   <script src='/binaryTree/p5.min.js'></script>
   <script src='/binaryTree/p5.dom.min.js'></script>
   <script src='/binaryTree/p5.experience.js'></script>
